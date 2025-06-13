@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Contact Us - Merlin Solar</title>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    input, textarea, select, button {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.25rem;
+      box-sizing: border-box;
+      font-size: 1rem;
+    }
+    button {
+      margin-top: 1.5rem;
+      cursor: pointer;
+      background-color: #0066cc;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #004999;
+    }
+  </style>
+</head>
+<body>
+  <h2>Contact Us</h2>
+
+  <label for="inquiryType">What do you need help with?</label>
+  <select id="inquiryType" onchange="toggleForm()" required>
+    <option value="">-- Please choose an option --</option>
+    <option value="product">Product Inquiry</option>
+    <option value="commercial">Commercial / Roofing / Mobile</option>
+    <option value="warranty">Warranty Support</option>
+    <option value="tech">Technical Support</option>
+  </select>
+
+  <!-- Lead Form -->
+  <form id="leadForm" action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8" method="POST" target="_top" style="display:none;">
+    <!-- Replace YOUR_ORG_ID_HERE with your Salesforce Org ID -->
+    <input type="hidden" name="oid" value="YOUR_ORG_ID_HERE" />
+    <input type="hidden" name="retURL" value="https://www.merlinsolar.com/about" />
+
+    <label for="lfname">First Name *</label>
+    <input id="lfname" type="text" name="first_name" required />
+
+    <label for="llname">Last Name *</label>
+    <input id="llname" type="text" name="last_name" required />
+
+    <label for="lemail">Email *</label>
+    <input id="lemail" type="email" name="email" required />
+
+    <label for="lcompany">Company *</label>
+    <input id="lcompany" type="text" name="company" required />
+
+    <label for="lmsg">Message</label>
+    <textarea id="lmsg" name="description" rows="4"></textarea>
+
+    <!-- Your reCAPTCHA site key here -->
+    <div class="g-recaptcha" data-sitekey="6LcqGWArAAAAAHDWD2j1LvQa8Y8NQaGo_1N_dunI"></div>
+
+    <button type="submit">Submit Inquiry</button>
+  </form>
+
+  <!-- Case Form -->
+  <form id="caseForm" action="https://YOUR_INSTANCE.salesforce.com/servlet/servlet.WebToCase?encoding=UTF-8" method="POST" target="_top" style="display:none;">
+    <!-- Replace YOUR_ORG_ID_HERE with your Salesforce Org ID -->
+    <!-- Note: Salesforce WebToCase uses 'orgId' (case-sensitive) -->
+    <input type="hidden" name="orgId" value="YOUR_ORG_ID_HERE" />
+    <input type="hidden" name="retURL" value="https://www.merlinsolar.com/technology" />
+
+    <label for="cname">Full Name *</label>
+    <input id="cname" type="text" name="name" required />
+
+    <label for="cemail">Email *</label>
+    <input id="cemail" type="email" name="email" required />
+
+    <label for="csubject">Subject *</label>
+    <input id="csubject" type="text" name="subject" required />
+
+    <label for="cmsg">Message</label>
+    <textarea id="cmsg" name="description" rows="4"></textarea>
+
+    <!-- Your reCAPTCHA site key here -->
+    <div class="g-recaptcha" data-sitekey="6LcqGWArAAAAAHDWD2j1LvQa8Y8NQaGo_1N_dunI"></div>
+
+    <button type="submit">Submit Support Request</button>
+  </form>
+
+  <script>
+    function toggleForm() {
+      const selection = document.getElementById("inquiryType").value;
+      const leadForm = document.getElementById("leadForm");
+      const caseForm = document.getElementById("caseForm");
+
+      leadForm.style.display = "none";
+      caseForm.style.display = "none";
+
+      if (selection === "product" || selection === "commercial") {
+        leadForm.style.display = "block";
+      } else if (selection === "warranty" || selection === "tech") {
+        caseForm.style.display = "block";
+      }
+    }
+
+    window.onload = function () {
+      const leadForm = document.getElementById("leadForm");
+      const caseForm = document.getElementById("caseForm");
+
+      if (leadForm) {
+        leadForm.addEventListener("submit", function (e) {
+          const response = grecaptcha.getResponse(leadForm.querySelector('.g-recaptcha'));
+          if (!response) {
+            e.preventDefault();
+            alert("Please check the reCAPTCHA box.");
+          }
+        });
+      }
+
+      if (caseForm) {
+        caseForm.addEventListener("submit", function (e) {
+          const response = grecaptcha.getResponse(caseForm.querySelector('.g-recaptcha'));
+          if (!response) {
+            e.preventDefault();
+            alert("Please check the reCAPTCHA box.");
+          }
+        });
+      }
+    };
+  </script>
+</body>
+</html>
